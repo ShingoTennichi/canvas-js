@@ -1,6 +1,6 @@
 import Cell from '../component/cell.js';
 import Particle from '../component/particle.js';
-import { imageUrl } from '../utils/ignore.js';
+import { imageUrl } from '../utils/imageUrl.js';
 
 const image = new Image();
 image.src = imageUrl;
