@@ -7,24 +7,23 @@ image.src = imageUrl;
 
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
-const canvasWidth = 500;
-const canvasHeight = 500;
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
+const CANVAS_WIDTH = 500;
+const CANVAS_HEIGHT = 500;
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
 
 let particleArray, imageCellArray;
 
 window.addEventListener("load", () => {
-  particleArray = initParticles(canvas.width, canvas.height);
-  imageCellArray = segmentImage(context, canvas.width, canvas.height);
-
-  animate();
+  let particleArray = initParticles(canvas.width, canvas.height);
+  let imageCellArray = segmentImage(context, canvas.width, canvas.height);
+  animate(canvas, context, particleArray, imageCellArray);
 });
 
 function initParticles(width, height) {
-  const numberOfParticles = 5000;
+  const NUM_OF_PARTICLES = 5000;
   const particleArray = [];
-  for (let i = 0; i < numberOfParticles; i++) {
+  for (let i = 0; i < NUM_OF_PARTICLES; i++) {
     particleArray.push(new Particle(width, height));
   }
 
@@ -33,14 +32,14 @@ function initParticles(width, height) {
 
 function segmentImage(context, width, height) {
   const imageData = getImageData(context, width, height);
-  const rgbaDataSize = 4;
+  const RGBA_DATA_SIZE = 4;
 
   const imageCellArray = [];
   for (let y = 0; y < height; y++) {
     const cells = [];
-    const row = y * rgbaDataSize * width;
+    const row = y * RGBA_DATA_SIZE * width;
     for (let x = 0; x < width; x++) {
-      const col = x * rgbaDataSize;
+      const col = x * RGBA_DATA_SIZE;
       const cell = createCell(imageData, row, col);
       cells.push(cell);
     }
@@ -59,26 +58,30 @@ function getImageData(context, width, height) {
 }
 
 function createCell(imageData, row, col) {
-  const red = imageData[row + col];
-  const green = imageData[row + col + 1];
-  const blue = imageData[row + col + 2];
+  const RED_INDEX = row + col;
+  const GREEN_INDEX = row + col + 1;
+  const BLUE_INDEX = row + col + 2;
+  const red = imageData[RED_INDEX];
+  const green = imageData[GREEN_INDEX];
+  const blue = imageData[BLUE_INDEX];
   return new Cell(red, green, blue);
 }
 
-function animate() {
-  setBackground();
-  updateParticles();
-  requestAnimationFrame(animate);
+function animate(canvas, context, particleArray, imageCellArray) {
+  setBackground(canvas, context);
+  updateParticles(context, particleArray, imageCellArray);
+  requestAnimationFrame(() => animate(canvas, context, particleArray, imageCellArray));
 }
 
-function setBackground() {
-  const defaultAlpha = 0.05;
-  context.globalAlpha = defaultAlpha;
-  context.fillStyle = "rgb(0, 0, 0)";
+function setBackground(canvas, context) {
+  const DEFAULT_ALPHA = 5;
+  const BACKGROUND_COLOR = "rgb(0, 0, 0)";
+  context.globalAlpha = DEFAULT_ALPHA;
+  context.fillStyle = BACKGROUND_COLOR;
   context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-function updateParticles() {
+function updateParticles(context, particleArray, imageCellArray) {
   for (let i = 0; i < particleArray.length; i++) {
     const particle = particleArray[i];
     const cell = imageCellArray[particle.getYAsRow()][particle.getXAsCol()];
@@ -89,6 +92,6 @@ function updateParticles() {
 }
 
 function createMoveCoefficientFromBrightness(brightness) {
-  const modifier = 100;
-  return brightness / modifier;
+  const MODIFIER = 100;
+  return brightness / MODIFIER;
 }

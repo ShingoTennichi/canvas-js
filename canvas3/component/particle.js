@@ -21,8 +21,9 @@ export default class Particle {
   }
 
   draw(context) {
+    const BACKGROUND_COLOR = "rgb(255, 255, 255)";
     context.beginPath();
-    context.fillStyle = "rgb(255, 255, 255)";
+    context.fillStyle = BACKGROUND_COLOR;
     context.fillRect(this._x, this._y, this.size, this.size);
   }
 
@@ -32,13 +33,13 @@ export default class Particle {
   }
 
   _modifyAlpha(context, moveCoefficient) {
-    const alphaModifier = 0.5;
-    context.globalAlpha = moveCoefficient * alphaModifier;
+    const ALPHA_MODIFIER = 0.5;
+    context.globalAlpha = moveCoefficient * ALPHA_MODIFIER;
   }
 
   _modifyPosition(moveCoefficient) {
-    const threshold = 2.55;
-    let movement = (threshold - moveCoefficient) + this.velocity;
+    const THRESHOLD = 2.55;
+    let movement = (THRESHOLD - moveCoefficient) + this.velocity;
     this._x += movement;
 
     if (this._isOverCanvasWidth()) {
